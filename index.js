@@ -1,10 +1,10 @@
-var usb = require('usb');
+var HID = require("node-hid");
 var Luxafor;
 
 Luxafor = function () {
-	this.pid = 0xf372;
-	this.vid = 0x04d8;
-	this.endpoint = undefined;
+	this.pid = 62322;
+	this.vid = 1240;
+	this.device = undefined;
 
 	this.colors = {
 		"red": 82,
@@ -16,35 +16,32 @@ Luxafor = function () {
 		"white": 87,
 		"off": 79
 	};
-}
-
-Luxafor.prototype.init = function (cb) {
-	var device = undefined,
-	interface = undefined;
-
-	device = usb.findByIds(this.vid, this.pid);
-	device.open();
-
-	interface = device.interface(0);
-
-	if (interface.isKernelDriverActive()) {
-		interface.detachKernelDriver();
-	}
-
-	interface.claim();
-
-	this.endpoint = interface.endpoint(1);
-
-	//Dummy data
-	var buff = new Buffer([0, 0]);
-	this.endpoint.transfer(buff, function () {
-		if (cb) {
-			cb();
-		}
-	});
 };
 
-Luxafor.prototype.setLuxaforColor = function (color, cb) {
+Luxafor.prototype.init = function (callback) {
+	var devices = HID.devices(),
+		path;
+
+	devices.forEach(function(current_device) {
+		if (current_device && (current_device.vendorId === this.vid) && (current_device.productId === this.pid)) {
+			path = current_device.path;
+		}
+	}.bind(this));
+
+	// open the device by its path - if found
+	if (!path) {
+		//console.log("Error - no path found for HID vendorId: " + this.vid + " productId: " + this.pid );
+		return false;
+	}
+
+	this.device = new HID.HID(path);
+
+	if (callback) {
+		callback();
+	}
+};
+
+Luxafor.prototype.setLuxaforColor = function (color, callback) {
 	var buff =  new Buffer(2);
 
 	//Padding
@@ -52,14 +49,15 @@ Luxafor.prototype.setLuxaforColor = function (color, cb) {
 
 	buff.writeUInt8(color, 1);
 
-	this.endpoint.transfer(buff, function () {
-		if (cb) {
-			cb();
-		}
-	});
+	// writing via HID is synchronous
+	this.device.write(buff);
+
+	if (callback) {
+		callback();
+	}
 };
 
-Luxafor.prototype.flashColor = function (r, g, b, cb) {
+Luxafor.prototype.flashColor = function (r, g, b, callback) {
 	var buff = new Buffer(8);
 
 	//Strobe
@@ -80,14 +78,15 @@ Luxafor.prototype.flashColor = function (r, g, b, cb) {
 	//"Re" 3. Repeat?
 	buff.writeUInt8(3, 7);
 
-	this.endpoint.transfer(buff, function () {
-		if (cb) {
-			cb();
-		}
-	});
+	// writing via HID is synchronous
+	this.device.write(buff);
+
+	if (callback) {
+		callback();
+	}
 };
 
-Luxafor.prototype.setColor = function  (r, g, b, cb) {
+Luxafor.prototype.setColor = function  (r, g, b, callback) {
 	var buff = new Buffer(5);
 
 	//Jump
@@ -100,7 +99,7 @@ Luxafor.prototype.setColor = function  (r, g, b, cb) {
 	buff.writeUInt8(b, 4);
 
 	this.endpoint.transfer(buff, function () {
-		if (cb) {
+		if (callback) {
 			cb();
 		}
 	});
@@ -108,4 +107,4 @@ Luxafor.prototype.setColor = function  (r, g, b, cb) {
 
 module.exports = function () {
 	return new Luxafor();
-}
+};

@@ -7,9 +7,9 @@ Control your Luxafor notification light via node.js!
 Installation
 ----
 
-We depend on the node.js usb library, which has some dependencies of its own.
+We depend on the node.js hid library, which has some dependencies of its own.
 
-https://github.com/nonolith/node-usb
+https://github.com/node-hid/node-hid
 
 ```
 npm install luxafor
@@ -27,9 +27,6 @@ Luxafor.init(function () {
 });
 ```
 
-You will probably need to sudo execute your test script else you will get
-`LIBUSB_ERROR_ACCESS`.
-
 API
 ----
 
@@ -41,13 +38,3 @@ Set Luxafor to a preset Luxafor color (see Luxafor.colors).
 
 ###flashColor(r, g, b, callback)
 Flash the Luxafor to provided r, g, b values (0-255).
-
-
-Troubleshooting
-----
-
-Help, I get `LIBUSB_ERROR_ACCESS`.
-Sudo run your script.
-
-Help, I get `LIBUSB_ERROR_ACCESS` even with sudo and I'm on a Mac.
-See https://github.com/nonolith/node-usb/issues/30 :(
