@@ -98,9 +98,9 @@ Luxafor.prototype.setColor = function  (r, g, b, callback) {
 	buff.writeUInt8(g, 3);
 	buff.writeUInt8(b, 4);
 
-	this.endpoint.transfer(buff, function () {
+	this.device.write(buff, function () {
 		if (callback) {
-			cb();
+			callback();
 		}
 	});
 };
