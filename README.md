@@ -29,7 +29,7 @@ Luxafor.init(function () {
 API
 ----
 
-###setLuxaforColor(luxaforColor, callback)
+###setColor(luxaforColor, callback)
 Set Luxafor to a preset Luxafor color (see Luxafor.colors).
 
 ###setRGB(r, g, b, callback)

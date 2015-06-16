@@ -42,7 +42,7 @@ Luxafor.prototype.init = function (callback) {
 	}
 };
 
-Luxafor.prototype.setLuxaforColor = function (color, callback) {
+Luxafor.prototype.setColor = function (color, callback) {
 	this.setRGB(color.r, color.g, color.b, callback);
 };
 
