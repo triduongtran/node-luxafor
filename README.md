@@ -22,19 +22,18 @@ Usage
 var Luxafor = require("luxafor")();
 
 Luxafor.init(function () {
-        Luxafor.setLuxaforColor(Luxafor.colors.blue, function () {
-	});
+  Luxafor.setLuxaforColor(Luxafor.colors.blue, function () {});
 });
 ```
 
 API
 ----
 
-###setColor(r, g, b, callback)
-Set Luxafor to provided r, g, b values (0-255).
-
 ###setLuxaforColor(luxaforColor, callback)
 Set Luxafor to a preset Luxafor color (see Luxafor.colors).
 
-###flashColor(r, g, b, callback)
+###setRGB(r, g, b, callback)
+Set Luxafor to provided r, g, b values (0-255).
+
+###flashRGB(r, g, b, callback)
 Flash the Luxafor to provided r, g, b values (0-255).

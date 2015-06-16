@@ -43,10 +43,10 @@ Luxafor.prototype.init = function (callback) {
 };
 
 Luxafor.prototype.setLuxaforColor = function (color, callback) {
-	this.setColor(color.r, color.g, color.b, callback);
+	this.setRGB(color.r, color.g, color.b, callback);
 };
 
-Luxafor.prototype.flashColor = function (r, g, b, callback) {
+Luxafor.prototype.flashRGB = function (r, g, b, callback) {
 	var buff = new Buffer(8);
 
 	//Strobe
@@ -73,7 +73,7 @@ Luxafor.prototype.flashColor = function (r, g, b, callback) {
 	callback && callback();
 };
 
-Luxafor.prototype.setColor = function (r, g, b, callback) {
+Luxafor.prototype.setRGB = function (r, g, b, callback) {
 	var buff = new Buffer(5);
 
 	//Jump
