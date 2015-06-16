@@ -52,9 +52,7 @@ Luxafor.prototype.setLuxaforColor = function (color, callback) {
 	// writing via HID is synchronous
 	this.device.write(buff);
 
-	if (callback) {
-		callback();
-	}
+	callback && callback();
 };
 
 Luxafor.prototype.flashColor = function (r, g, b, callback) {
@@ -81,9 +79,7 @@ Luxafor.prototype.flashColor = function (r, g, b, callback) {
 	// writing via HID is synchronous
 	this.device.write(buff);
 
-	if (callback) {
-		callback();
-	}
+	callback && callback();
 };
 
 Luxafor.prototype.setColor = function  (r, g, b, callback) {
@@ -98,11 +94,9 @@ Luxafor.prototype.setColor = function  (r, g, b, callback) {
 	buff.writeUInt8(g, 3);
 	buff.writeUInt8(b, 4);
 
-	this.device.write(buff, function () {
-		if (callback) {
-			callback();
-		}
-	});
+	this.device.write(buff);
+
+	callback && callback();
 };
 
 module.exports = function () {
