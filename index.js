@@ -2,19 +2,21 @@ var HID = require("node-hid");
 var Luxafor;
 
 Luxafor = function () {
-	this.pid = 62322;
-	this.vid = 1240;
+	this.pid    = 62322;
+	this.vid    = 1240;
 	this.device = undefined;
 
 	this.colors = {
-		"red": 82,
-		"green": 71,
-		"blue": 66,
-		"cyan": 67,
-		"magenta": 77,
-		"yellow": 89,
-		"white": 87,
-		"off": 79
+		"red":     { "r": 50 ,"g": 0  ,"b": 0  },
+		"green":   { "r": 0  ,"g": 50 ,"b": 0  },
+		"blue":    { "r": 0  ,"g": 0  ,"b": 50  },
+
+		"cyan":    { "r": 0  ,"g": 50 ,"b": 50 },
+		"magenta": { "r": 50 ,"g": 0  ,"b": 50 },
+		"yellow":  { "r": 50 ,"g": 50 ,"b": 0  },
+
+		"white": 	 { "r": 50 ,"g": 50 ,"b": 50 },
+		"off": 		 { "r": 0  ,"g": 0  ,"b": 0  }
 	};
 };
 
@@ -30,7 +32,6 @@ Luxafor.prototype.init = function (callback) {
 
 	// open the device by its path - if found
 	if (!path) {
-		//console.log("Error - no path found for HID vendorId: " + this.vid + " productId: " + this.pid );
 		return false;
 	}
 
@@ -41,23 +42,11 @@ Luxafor.prototype.init = function (callback) {
 	}
 };
 
-Luxafor.prototype.setLuxaforColor = function (color, callback) {
-	var buff =  new Buffer(2);
-
-	//Padding
-	buff.writeUInt8(0, 0);
-
-	buff.writeUInt8(color, 1);
-
-	// writing via HID is synchronous
-	this.device.write(buff);
-
-	if (callback) {
-		callback();
-	}
+Luxafor.prototype.setColor = function (color, callback) {
+	this.setRGB(color.r, color.g, color.b, callback);
 };
 
-Luxafor.prototype.flashColor = function (r, g, b, callback) {
+Luxafor.prototype.flashRGB = function (r, g, b, callback) {
 	var buff = new Buffer(8);
 
 	//Strobe
@@ -81,12 +70,10 @@ Luxafor.prototype.flashColor = function (r, g, b, callback) {
 	// writing via HID is synchronous
 	this.device.write(buff);
 
-	if (callback) {
-		callback();
-	}
+	callback && callback();
 };
 
-Luxafor.prototype.setColor = function  (r, g, b, callback) {
+Luxafor.prototype.setRGB = function (r, g, b, callback) {
 	var buff = new Buffer(5);
 
 	//Jump
@@ -98,11 +85,9 @@ Luxafor.prototype.setColor = function  (r, g, b, callback) {
 	buff.writeUInt8(g, 3);
 	buff.writeUInt8(b, 4);
 
-	this.endpoint.transfer(buff, function () {
-		if (callback) {
-			cb();
-		}
-	});
+	this.device.write(buff);
+
+	callback && callback();
 };
 
 module.exports = function () {
