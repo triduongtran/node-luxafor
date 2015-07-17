@@ -22,7 +22,7 @@ Usage
 var Luxafor = require("luxafor")();
 
 Luxafor.init(function () {
-  Luxafor.setLuxaforColor(Luxafor.colors.blue, function () {});
+  Luxafor.setColor(Luxafor.colors.blue, function () {});
 });
 ```
 
